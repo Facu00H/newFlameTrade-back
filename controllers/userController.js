@@ -126,13 +126,14 @@ const userController = {
                         }
                         user.loggedIn = true
                         await user.save()
-
+                        const token = jwt.sign({id: user._id}, process.env.KEY_JWT, {expiresIn: 60*60*24})
                         res.status(200).json({
-                            success: true,
-                            response: {user: loginUser},
-                            message: 'Welcome ' + user.name
-                        })
-                    } else { // Contraseña NO coincide
+                            success:true,
+                            response: {
+                                user: loginUser,
+                                token:token},
+                            message: `Welcome ${user.name}`
+                    })} else { // Contraseña NO coincide
                         res.status(400).json({
                             success: false,
                             message: 'Username or password incorrect'
@@ -147,32 +148,35 @@ const userController = {
                             role: user.role,
                             photo: user.photo
                         }
+                        const token = jwt.sign({id: user._id}, process.env.KEY_JWT, {expiresIn: 60*60*24})
                         user.loggedIn = true
                         await user.save()
-
+                        console.log (user)
                         res.status(200).json({
-                            success: true,
-                            response: {user: loginUser},
-                            message: 'Welcome ' + user.name
+                            success:true,
+                            response: {user: loginUser,
+                                        token: token    
+                            },
+                            message: "Welcome " + user.name
                         })
-                    } else { // Contraseña NO coincide
+                    }else{ // if password does not match
                         res.status(400).json({
-                            success: false,
-                            message: 'Invalid credentials'
-                        })
+                            success:false,
+                            message: "Invalid credentials."
+                            })
+                        }
                     }
-                }
-            } else { // Usuario existe y NO está verificado
-                res.status(400).json({
-                    success: false,
-                    message: 'Please, verify your email account and try again'
+            }else{ // If user exists but is not verified
+                res.status(401).json({
+                    success:false,
+                    message: "Please, verify your email account and try again..."
                 })
             }
-        } catch(error) {
+        }catch (error){
             console.log(error)
             res.status(400).json({
-                succes: false,
-                message: 'sign in error try again later'
+                success:false,
+                message: "Error signing in."
             })
         }
     },
