@@ -5,7 +5,8 @@ const concurseSchema = new mongoose.Schema({
   description: { type: String, required: true },
   photo: { type: String, required: true },
   likes: { type: Array, required: true },
+  course: { type: Array, required: true },
 });
 
-const User = mongoose.model("concurses", userSchema);
-module.exports = User;
+const Concurse = mongoose.model("concurses", concurseSchema);
+module.exports = Concurse;
