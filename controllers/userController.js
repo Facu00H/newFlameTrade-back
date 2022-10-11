@@ -143,7 +143,7 @@ const userController = {
                             )
                         user.logged = true
                         await user.save()
-                        const token = jwt.sign({id: user._id}, process.env.KEY_JWT, {expiresIn: 60*60*24})
+                        token = jwt.sign({id: user._id}, process.env.KEY_JWT, {expiresIn: 60*60*24})
                         res.status(200).json({
                             succes: true,
                             response: { 
